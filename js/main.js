@@ -4,6 +4,7 @@ containerDiv = document.getElementById("container"),
 samContainerDiv = document.getElementById("sam-container"),
 samDiv = document.getElementById("sam"),
 samSprite = document.getElementById("sam-sprite"),
+instructions = document.getElementById('instructions'),
 layerHorizontalArray = new Array,
 layerHorizontalSpeedArray = new Array,
 pageVerticalPosition = 0,
@@ -13,7 +14,8 @@ isRunning = true,
 running,
 standing,
 timeout,
-count = 0;
+count = 0,
+first = 0;
 
 function setLayerSpeed() {
     for (; layerHorizontalSpeedArray.length > 0; ){
@@ -38,6 +40,10 @@ window.onload = function() {
 };
 
 window.onscroll = function(e) {
+  if(first === 2) {
+    instructions.parentElement.removeChild(instructions);
+  }
+  first += 1;
   runTheseFunctionsAfterScrollOrSwipe();
 };
 
@@ -114,13 +120,6 @@ function standingAni() {
   },(1000/5));
 }
 
-// $(document).on("scrollstop",function(){
-//   console.log("stop");
-//   cancelAnimationFrame(running);
-//   clearTimeout(timeout);
-//   standingAni();
-// });
-
 function runningAni() {
   timeout = setTimeout(function(){
     if(count > 7) { count = 0; }
@@ -129,26 +128,3 @@ function runningAni() {
     running = requestAnimationFrame(runningAni);
   },(1000/9));
 }
-
-// $(document).on("scrollstart",function(){
-//   console.log("start");
-//   cancelAnimationFrame(standing);
-//   clearTimeout(timeout);
-//   runningAni();
-// });
-//
-// function animateSam() {
-//   clearInterval(shiftSamFrameTimer),
-//   shiftSamFrameTimer = setInterval(function() {
-//     if(counter === 0){
-//       counter += 1;
-//     }else {
-//       counter -= 1;
-//     }
-//     shiftSamFrame();
-//   }, 200);
-// }
-//
-// function shiftSamFrame() {
-//   samFramesDiv.style.left = -1 * 200 * (1 + counter) + "px";
-// }
