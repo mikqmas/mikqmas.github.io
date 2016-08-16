@@ -71,6 +71,10 @@
   font-size: 2em;
 }
 
+#scroll {
+  display: none;
+}
+
 #ground-and-grass-container {
   position: absolute;
   left: 0;

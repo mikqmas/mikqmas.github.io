@@ -5,6 +5,7 @@ samContainerDiv = document.getElementById("sam-container"),
 samDiv = document.getElementById("sam"),
 samSprite = document.getElementById("sam-sprite"),
 instructions = document.getElementById('instructions'),
+loading = document.getElementById('loading'),
 layerHorizontalArray = new Array,
 layerHorizontalSpeedArray = new Array,
 pageVerticalPosition = 0,
@@ -15,7 +16,42 @@ running,
 standing,
 timeout,
 count = 0,
-first = 0;
+first = 0,
+keys = {37: 1, 38: 1, 39: 1, 40: 1};
+
+disableScroll();
+
+function preventDefault(e) {
+  e = e || window.event;
+  if (e.preventDefault)
+      e.preventDefault();
+  e.returnValue = false;
+}
+
+function preventDefaultForScrollKeys(e) {
+    if (keys[e.keyCode]) {
+        preventDefault(e);
+        return false;
+    }
+}
+
+function disableScroll() {
+  if (window.addEventListener) // older FF
+      window.addEventListener('DOMMouseScroll', preventDefault, false);
+  window.onwheel = preventDefault; // modern standard
+  window.onmousewheel = document.onmousewheel = preventDefault; // older browsers, IE
+  window.ontouchmove  = preventDefault; // mobile
+  document.onkeydown  = preventDefaultForScrollKeys;
+}
+
+function enableScroll() {
+    if (window.removeEventListener)
+        window.removeEventListener('DOMMouseScroll', preventDefault, false);
+    window.onmousewheel = document.onmousewheel = null;
+    window.onwheel = null;
+    window.ontouchmove = null;
+    document.onkeydown = null;
+}
 
 function setLayerSpeed() {
     for (; layerHorizontalSpeedArray.length > 0; ){
@@ -32,6 +68,9 @@ function setPageHeight() {
 }
 
 window.onload = function() {
+  document.getElementById("scroll").style.display = "block";
+  document.getElementById("loading").style.display = "none";
+  enableScroll();
   setPageHeight();
   storeDivs();
   setLayerSpeed();
