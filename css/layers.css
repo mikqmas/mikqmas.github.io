@@ -158,12 +158,12 @@
 }
 
 #projects-flag {
-  left: 9200px;
+  left: 9000px;
   background-image: url(../imgs/projects-flag.gif);
 }
 
 #contact-flag {
-  left: 12100px;
+  left: 12200px;
   background-image: url(../imgs/contact-flag.gif);
 }
 
@@ -256,7 +256,7 @@
 }
 
 #billboard-kelp {
-  left: 9700px;
+  left: 9400px;
   bottom: 10%;
 }
 #kelp-bill {
@@ -264,15 +264,23 @@
 }
 
 #billboard-smb {
-  left:10500px;
+  left:10100px;
   bottom: 10%;
 }
 #smb-bill {
   background-image: url(../imgs/smb.jpg);
 }
 
+#billboard-currency {
+  left:10800px;
+  bottom: 10%;
+}
+#currency-bill {
+  background-image: url(../imgs/currency-bill.jpg);
+}
+
 #billboard-chess {
-  left:11300px;
+  left:11500px;
   bottom: 10%;
 }
 #chess-bill {
@@ -313,7 +321,7 @@
 #end {
   position: absolute;
   top: 30%;
-  left: 13750px;
+  left: 13550px;
   color: white;
   width: 800px;
   font-size: 3em;
