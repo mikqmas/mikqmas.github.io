@@ -14,10 +14,10 @@ import { degToRad } from 'three/src/math/MathUtils.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
-let playing = false;
-let action;
-let lStick;
+const START_POSITION = {x: 3, y: 3, z: 8};
 const PLAY_POSITION = {x: 0, y: 1.5, z: 1.3};
+let lStick;
+let toastTimeout;
 const manager = new THREE.LoadingManager();
 let mixer;
 manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
@@ -44,12 +44,7 @@ button.style.position = "absolute"
 button.innerText = "Stats for Nerds"
 button.style.zIndex = 5
 button.addEventListener("click", event => toggleStats());
-// const statsdom = document.getElementById("stats")
 document.body.appendChild(button)
-{/* <button id="showstats" onclick="alert('test')">stats for nerds</button> */}
-// document.getElementById("showstats").addEventListener("click", event => console.log("showStats()"));
-
-// toggleStats()
 
 function toggleStats() {
     const container = document.getElementById( 'stats' );
@@ -99,7 +94,7 @@ scene.background = new THREE.Color( 0xbfe3dd );
 scene.environment = pmremGenerator.fromScene( new RoomEnvironment(), 0.04 ).texture;
 
 const camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, .1, 100 );
-camera.position.set( 3, 3, 8 );
+camera.position.set(...Object.values(START_POSITION));
 
 // Interactive
 const interactionManager = new InteractionManager(
@@ -169,9 +164,6 @@ function addWebsite(screen) {
     plane.name = "Screen"
     holder.add(plane);
     scene.add(holder);
-    // const el = holder.children.find((el) => el.isCSS3DObject)
-    // const plane2 = holder.children[1]
-    // console.log(plane2)
 
     setTimeout(() => {
         plane.material.opacity = 0
@@ -297,17 +289,24 @@ function addButton() {
     cubeOutline.scale.multiplyScalar(1.05);
 
     cube.addEventListener("click", (event) => {
-        playing = true;
         event.stopPropagation();
-        controls.enabled = false;
+        showToast("Press 'Esc' Key to Return");
         cssRenderer.domElement.style.pointerEvents = 'none';
         const tween = new TWEEN.Tween(camera.position)
             .to(PLAY_POSITION, 1500)
             .easing(TWEEN.Easing.Quadratic.InOut)
-            .onComplete(() => {controls.enabled = true;})
             .start();
         tgroup.add(tween);
     });
+
+    // Esc to Home
+    document.addEventListener("keydown", event => {
+        console.log(camera.position === new THREE.Vector3(START_POSITION), camera.position, new THREE.Vector3(START_POSITION))
+        if (event.key === "Escape" && camera.position.distanceTo(START_POSITION) > 3) {
+            console.log("HRE")
+            cameraToHome(scene.getObjectByName("stopMesh"));
+        }
+    })
 
     cube.addEventListener("mouseover", event => {
         document.body.style.cursor = 'pointer';
@@ -348,6 +347,44 @@ function statsVF() {
     return [totalVer, totalFace];
 }
 
+function cameraToHome(stopMesh) {
+    cssRenderer.domElement.style.pointerEvents = 'auto';
+    if (toastTimeout) {
+        clearTimeout(toastTimeout);
+    }
+    const toast = document.getElementById('toast');
+    toast.className = 'toast';
+    const reverse = new TWEEN.Tween(camera.position)
+        .to(START_POSITION, 1500)
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .onComplete(() => {console.log(stopMesh); scene.remove(stopMesh)})
+        .start();
+    tgroup.add(reverse);
+}
+
+function returnHome() {
+    const geo = new THREE.CylinderGeometry(0.03,0.04,0.01,8,2);
+    const mat = new THREE.MeshBasicMaterial({color: 0xff0000});
+    const stopMesh = new THREE.Mesh(geo, mat);
+    stopMesh.name = "stopMesh";
+    stopMesh.position.set(0,1,.42);
+    stopMesh.rotateX(degToRad(45))
+
+    stopMesh.addEventListener("click", event => {
+        cameraToHome(stopMesh);
+    })
+    scene.add(stopMesh)
+    interactionManager.add(stopMesh)
+}
+
+function showToast(text) {
+    const toast = document.getElementById('toast');
+    toast.className = 'toast show';
+    toast.innerText = text;
+    toastTimeout = setTimeout(() => { toast.className = 'toast'; }, 8900);
+}
+
+// Run
 window.onresize = function () {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
