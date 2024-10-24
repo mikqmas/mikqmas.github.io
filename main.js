@@ -12,7 +12,9 @@ import * as TWEEN from '@tweenjs/tween.js';
 import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
 import { degToRad } from 'three/src/math/MathUtils.js';
 
+let playing = false;
 let action;
+let lStick;
 const PLAY_POSITION = {x: 0, y: 1.5, z: 1.3};
 const manager = new THREE.LoadingManager();
 let mixer;
@@ -98,6 +100,16 @@ loader.load( 'models/arcade_cabinet.glb', function(gltf) {
     // action.play();
     scene.add(cabinet);
     console.log("cabinet", cabinet.position)
+
+    lStick = cabinet.children.find(el => el.name === "LJoystick")
+    console.log("lstick", cabinet.children)
+
+    document.addEventListener("wheel", event => {
+        console.log("scrolling",event.deltaY);
+        if (lStick) {
+            lStick.rotateZ(degToRad(event.delayY));
+        }
+    })
     
     addWebsite(gltf.scene.children[5]);
 })
@@ -115,6 +127,7 @@ const cube = new THREE.Mesh(geo, mat);
 // cube.rotateX(90)
 cube.position.setY(4)
 cube.addEventListener("click", (event) => {
+    playing = true;
     event.stopPropagation();
     controls.enabled = false;
     cssRenderer.domElement.style.pointerEvents = 'none';
@@ -319,6 +332,14 @@ function addWebsite(screen) {
         iframe.style.border = 'none';
         // iframe.style.backgroundColor = 'blue';
         el.element.append(iframe);
+        // iframe.addEventListener("wheel", event => {
+        //     console.log("scrolling",event.deltaY);
+        //     if (lStick) {
+        //         lStick.rotateZ(degToRad(event.delayY));
+        //     }
+        // })
+        iframe.contentWindow.document.addEventListener("wheel", event => console.log(event))
+        // .addEventListener("wheel", event => console.log(event))
     }, 2000)
     
 
