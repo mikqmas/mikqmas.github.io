@@ -338,7 +338,11 @@ function addWebsite(screen) {
         //         lStick.rotateZ(degToRad(event.delayY));
         //     }
         // })
-        iframe.contentWindow.document.addEventListener("wheel", event => console.log(event))
+        iframe.addEventListener('load', () => {
+            console.log('iframe loaded');
+            iframe.contentWindow.document.addEventListener("wheel", event => console.log(event))
+            document.getElementsByTagName("iframe")[0].contentWindow.document.addEventListener("click", event => console.log(event))
+        })
         // .addEventListener("wheel", event => console.log(event))
     }, 2000)
     
