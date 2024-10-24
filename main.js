@@ -95,21 +95,14 @@ loader.load( 'models/arcade_cabinet.glb', function(gltf) {
     console.log(gltf)
     mixer = new THREE.AnimationMixer(cabinet);
     console.log("animation", gltf.animations)
-    action = mixer.clipAction(gltf.animations[1]);
-    action.setLoop(THREE.LoopOnce);
+    // action = mixer.clipAction(gltf.animations[1]);
+    // action.setLoop(THREE.LoopOnce);
     // action.play();
     scene.add(cabinet);
     console.log("cabinet", cabinet.position)
 
-    lStick = cabinet.children.find(el => el.name === "LJoystick")
+    lStick = cabinet.children.find(el => el.name === "LJoystickstick")
     console.log("lstick", cabinet.children)
-
-    document.addEventListener("wheel", event => {
-        console.log("scrolling",event.deltaY);
-        if (lStick) {
-            lStick.rotateZ(degToRad(event.delayY));
-        }
-    })
     
     addWebsite(gltf.scene.children[5]);
 })
@@ -340,8 +333,25 @@ function addWebsite(screen) {
         // })
         iframe.addEventListener('load', () => {
             console.log('iframe loaded');
-            iframe.contentWindow.document.addEventListener("wheel", event => console.log(event))
-            document.getElementsByTagName("iframe")[0].contentWindow.document.addEventListener("click", event => console.log(event))
+
+
+            let returnStick;
+            iframe.contentWindow.document.addEventListener("wheel", event => {
+                if (lStick) {
+                    console.log(event.deltaY)
+                    if (event.deltaY > 0 && lStick.rotation.y <= degToRad(event.deltaY/2)) {
+                        lStick.rotation.y = (Math.min(degToRad(event.deltaY/2),  45));
+                    }else if (event.deltaY < 0 && lStick.rotation.y >= degToRad(event.deltaY/5)) {
+                        lStick.rotation.y = (Math.min(degToRad(event.deltaY/5),  -45));
+                    }
+                    if (returnStick) {
+                        clearTimeout(returnStick)
+                    }
+                    returnStick = setTimeout(() => {
+                        lStick.rotation.y = 0
+                    },1000) 
+                }
+            })
         })
         // .addEventListener("wheel", event => console.log(event))
     }, 2000)
