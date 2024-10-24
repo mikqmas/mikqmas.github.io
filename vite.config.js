@@ -7,7 +7,7 @@ export default defineConfig({
         rollupOptions: {
             terserOptions: {
                 compress: {
-                    drop_console: false, // Keep console.log statements
+                    drop_console: true, // Keep console.log statements
                 },
             },
         },
