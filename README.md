@@ -8,10 +8,9 @@
 
 3D models created with Blender. Page is build on Three.js, rendering via WebGL the HTML canvas and CSS3D renderer used for the iframe within the screen to show my old porfolio. 
 
-#### Vanilla JS/CSS Side-Scroller Portfolio (2016)
+#### [Vanilla JS/CSS Side-Scroller Portfolio (2016)](https://mikqmas.github.io/porfolioV1)
 Using vanilla JS/CSS to simulate a 2D side-scroller. All assets hand-drawn using Photoshop/Krita.
 ![screenshot](./imgs/ss.jpg)
-
 
 [threejs]: https://img.shields.io/badge/Threejs%20-%20threejs?label=r169
 [threejs-url]: https://github.com/mrdoob/three.js/tree/dev
@@ -20,6 +19,7 @@ Using vanilla JS/CSS to simulate a 2D side-scroller. All assets hand-drawn using
 [blender-url]: https://www.blender.org/
 
 [personal]: https://img.shields.io/badge/Personal%20-%20personal?label=V1
-[personal-url]: https://mikqmas.github.io/porfolioV1
+[personal-url]: https://github.com/mikqmas/porfolioV1 
+
 
 
