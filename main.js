@@ -122,7 +122,7 @@ loader.load( 'models/arcade_cabinet.glb', function(gltf) {
     scene.add(cabinet);
     console.log("cabinet", cabinet.position)
 
-    lStick = cabinet.children.find(el => el.name === "LJoystickstick")
+    lStick = cabinet.children.find(el => el.name === "LJoystickstick002")
     console.log("lstick2", cabinet)
     
     addWebsite(gltf.scene.children[5]);
