@@ -4,8 +4,7 @@
 [![Blender 3D Modeler][blender]][blender-url]
 [![Personal Portfolio][personal]][personal-url]
 
-#### Three.js Arcade Cabinet 
-
+#### [Three.js Arcade Cabinet] (https://mikqmas.github.io/)
 3D models created with Blender. Page is build on Three.js, rendering via WebGL the HTML canvas and CSS3D renderer used for the iframe within the screen to show my old porfolio. 
 
 #### [Vanilla JS/CSS Side-Scroller Portfolio (2016)](https://mikqmas.github.io/porfolioV1)
