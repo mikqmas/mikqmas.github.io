@@ -290,7 +290,12 @@ function addButton() {
 
     cube.addEventListener("click", (event) => {
         event.stopPropagation();
-        showToast("Press 'Esc' Key to Return");
+        let toast = "Press 'Esc' Key to Return";
+        if ('ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0) {
+            mobileEscape();
+            toast = "Press 'Back Home' at Top Right";
+        }
+        showToast(toast);
         cssRenderer.domElement.style.pointerEvents = 'none';
         const tween = new TWEEN.Tween(camera.position)
             .to(PLAY_POSITION, 1500)
@@ -382,6 +387,12 @@ function showToast(text) {
     toast.className = 'toast show';
     toast.innerText = text;
     toastTimeout = setTimeout(() => { toast.className = 'toast'; }, 8900);
+}
+
+function mobileEscape() {
+    const button = document.getElementById("mobileEscape");
+    button.style.display = "block";
+    button.addEventListener("click", cameraToHome);
 }
 
 // Run
