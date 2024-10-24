@@ -14,10 +14,10 @@ Using vanilla JS/CSS to simulate a 2D side-scroller. All assets hand-drawn using
 [threejs]: https://img.shields.io/badge/Threejs%20-%20threejs?label=r169
 [threejs-url]: https://github.com/mrdoob/three.js/tree/dev
 
-[blender]: https://img.shields.io/badge/Blender%20-%20blender?label=4.2%20LTS
+[blender]: https://img.shields.io/badge/Blender%20-%20blender?label=4.2%20LTS&color=blue
 [blender-url]: https://www.blender.org/
 
-[personal]: https://img.shields.io/badge/Personal%20-%20personal?label=V1
+[personal]: https://img.shields.io/badge/Personal%20-%20personal?label=V1&color=red
 [personal-url]: https://github.com/mikqmas/porfolioV1 
 
 
