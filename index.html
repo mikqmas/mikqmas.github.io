@@ -1,98 +1,22 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="./css/main.css" media="screen" charset="utf-8">
-    <link rel="stylesheet" href="./css/layers.css" media="screen" charset="utf-8">
-    <link rel="shortcut icon" type="image/png" href="./favicon.png"/>
-    <title>Sam Q Kim</title>
-    <meta name="description" content="Hello, I am a web developer who likes to code and design. Let's build something cool together.">
-    <link href="https://fonts.googleapis.com/css?family=Comfortaa:400,700" rel="stylesheet">
-  </head>
-  <body>
-    <div id="content">
-      <div id="page">
-        <div id="container">
-          <div class="layer-horizontal" id="layer-horizontal-1">
-            <div class="background" id="bay"></div>
-            <div class="background" id="back"></div>
-          </div>
-          <div class="layer-horizontal" id="layer-horizontal-1-2">
-            <div class="background" id="front"></div>
-            <div class="floating" id="boat"></div>
-          </div>
-          <div class="layer-horizontal" id="layer-horizontal-2">
-            <div class="floating" id="title"></div>
-            <div class="banner" id="about-flag"></div>
-            <div id="about">Hi! My name is Sam and I like to <strong>code</strong> and <strong>design</strong>. Let's build something cool together.</div>
-            <div class="banner" id="skills-flag"></div>
-            <div id="skills"></div>
-            <div class="banner" id="education-flag"></div>
-            <div class="edu-buildings" id="vandy"></div>
-            <div class="edu-buildings" id="aa"></div>
-            <div class="banner" id="projects-flag"></div>
-            <div class="billboard" id="billboard-kelp">
-              <h1 id="kelp"><a target="_blank" href="http://www.kelp.pw/">React/Rails WebApp</a></h1>
-              <p>Full-stack one-page restaurant review site www.kelp.pw.</p>
-            <a class="billboard-link" target="_blank" href="http://www.kelp.pw/"><div class="billboard-image" id="kelp-bill"></div></a>
-          </div>
-            <div class="billboard" id="billboard-smb">
-              <h1 id="smb"><a target="_blank" href="http://mikqmas.github.io/smb">3D JS/WebGL Game</a></h1>
-              <p>
-                Showcasing the power of modern browsers + Javascript.
-              </p>
-              <a class="billboard-link" target="_blank" href="http://mikqmas.github.io/smb"><div class="billboard-image" id="smb-bill"></div></a>
-            </div>
+<html lang="en">
+	<head>
+		<link rel="shortcut icon" type="image/png" href="./favicon.png"/>
+		<meta charset="utf-8">
+		<title>My first three.js app</title>
+		<style>
+			body {
+				background-color: #bfe3dd;
+				color: #000;
+			}
 
-            <div class="billboard" id="billboard-currency">
-              <h1 id="currency"><a target="_blank" href="https://mikqmas.github.io/interactivejs">Interactive React</a></h1>
-              <p>Interactive map using SVG built on ReactJS</p>
-              <a class="billboard-link" target="_blank" href="https://mikqmas.github.io/interactivejs"><div class="billboard-image" id="currency-bill"></div></a>
-            </div>
-
-            <div class="billboard" id="billboard-chess">
-              <h1 id="chess"><a target="_blank" href="http://www.github.com/mikqmas/chess">Ruby Chess AI</a></h1>
-              <p>Custom rolled recursive chess AI built with Ruby.</p>
-              <a class="billboard-link" target="_blank" href="http://www.github.com/mikqmas/chess"><div class="billboard-image" id="chess-bill"></div></a>
-            </div>
-            <div class="banner" id="contact-flag"></div>
-            <a href="https://www.github.com/mikqmas" target="_blank"><div class="contacts" id="github"></div></a>
-            <a href="https://www.linkedin.com/in/samqkim" target="_blank"><div class="contacts" id="linkedin"></div></a>
-            <a href="mailto:samqkim@gmail.com?Subject=Hello%20from%20the%20otherside" target="_blank"><div class="contacts" id="email"></div></a>
-            <div id="end">Thank you for visiting my site. Please feel free to <a href="mailto:samqkim@gmail.com" target="_blank">contact me</a>.</div>
-          </div>
-          <div class="layer-horizontal" id="layer-horizontal-3">
-            <div id="ground-and-grass-container">
-              <div class="ground"></div>
-              <div class="grass"></div>
-            </div>
-          </div>
-          <div id="sam-container">
-            <div id="sam">
-              <div id="sam-sprite"></div>
-            </div>
-          </div>
-          <div id="instructions">
-            <div id="scroll">
-              <img src="./imgs/scrollicon.png" alt="scroll" />
-              <p>Use vertical scroll to navigate.</p>
-            </div>
-            <div id="loading">
-              <div id="loader"></div>
-              <p>Loading...</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <script type="text/javascript" src="./js/main.js"></script>
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-      ga('create', 'UA-81679628-2', 'auto');
-      ga('send', 'pageview');
-    </script>
-  </body>
+			a {
+				color: #2983ff;
+			}
+		</style>
+	</head>
+	<body>
+        <div id="container"></div>
+		<script type="module" src="/main.js"></script>
+	</body>
 </html>
