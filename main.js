@@ -36,10 +36,44 @@ manager.onError = function ( url ) {
 	console.log( 'There was an error loading ' + url );
 };
 
-const container = document.getElementById( 'container' );
-const stats = new Stats();
-container.appendChild( stats.dom );
+let stats;
 
+const button = document.createElement('button')
+button.style.cursor = 'pointer'
+button.style.position = "absolute"
+button.innerText = "Stats for Nerds"
+button.style.zIndex = 5
+button.addEventListener("click", event => toggleStats());
+// const statsdom = document.getElementById("stats")
+document.body.appendChild(button)
+{/* <button id="showstats" onclick="alert('test')">stats for nerds</button> */}
+// document.getElementById("showstats").addEventListener("click", event => console.log("showStats()"));
+
+// toggleStats()
+
+function toggleStats() {
+    const container = document.getElementById( 'stats' );
+    console.log(container.style.visibility)
+    if (container.style.visibility != "") {
+        container.style.visibility = container.style.visibility === "hidden" ? "visible" : "hidden";
+        return;
+    }
+    stats = new Stats();
+    const dom = stats.dom;
+    dom.style.top = '35px'
+    dom.style.left = '8px'
+    container.appendChild( dom );
+    
+    const [ver, face] = statsVF();
+    const st = document.createElement('div');
+    st.innerHTML = `Vertices: ${ver} <br/> Faces: ${face}`;
+    st.style.position = 'absolute'
+    st.style.top = '85px'
+    st.style.left = '8px'
+    // st.innerText("Vertices: 0")
+    container.appendChild(st);
+    container.style.visibility = "visible";
+}
 
 const tgroup = new TWEEN.Group();
 const scene = new THREE.Scene();
@@ -56,7 +90,7 @@ const renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
 renderer.setClearColor(0x000000, 0);
 renderer.domElement.style.position = 'absolute';
 renderer.domElement.style.top = 0;
-renderer.domElement.style.zIndex = 1;
+// renderer.domElement.style.zIndex = -1;
 // renderer.setPixelRatio( window.devicePixelRatio );
 renderer.setSize( window.innerWidth, window.innerHeight);
 cssRenderer.domElement.appendChild( renderer.domElement );
@@ -85,6 +119,8 @@ const controls = new OrbitControls( camera, renderer.domElement );
 controls.target.set( 0, 1.2, 0 );
 controls.enablePan = false;
 controls.enableDamping = true;
+
+// cssRenderer.domElement.style.pointerEvents = 'none';
 
 // GLB Model loader
 const dracoLoader = new DRACOLoader();
@@ -115,37 +151,37 @@ light3.position.set(5, 5, 5);
 scene.add(light3);
 
 
-// Button2
-// const cube = addCube();
-const geo2 = new THREE.BoxGeometry(1,1,1);
-const mat2= new THREE.MeshBasicMaterial({color: 0xff0000});
-const cube2 = new THREE.Mesh(geo2, mat2);
-// cube.rotateX(90)
-cube2.position.setY(2)
-cube2.addEventListener("click", (event) => {
-    event.stopPropagation();
-    console.log("click", action)
-    // action.loop = THREE.LoopOnce;
-    action.clampWhenFinished = true;
+// // Button2
+// // const cube = addCube();
+// const geo2 = new THREE.BoxGeometry(1,1,1);
+// const mat2= new THREE.MeshBasicMaterial({color: 0xff0000});
+// const cube2 = new THREE.Mesh(geo2, mat2);
+// // cube.rotateX(90)
+// cube2.position.setY(2)
+// cube2.addEventListener("click", (event) => {
+//     event.stopPropagation();
+//     console.log("click", action)
+//     // action.loop = THREE.LoopOnce;
+//     action.clampWhenFinished = true;
 
-    action.play();
-    // controls.enabled = false;
-    // cssRenderer.domElement.style.pointerEvents = 'none';
-    // const tween = new TWEEN.Tween(camera.position)
-    //     .to(PLAY_POSITION, 1500)
-    //     .easing(TWEEN.Easing.Quadratic.InOut)
-    //     // .onUpdate(() =>
-    //     //   camera.position.set(coords.x, coords.y, camera.position.z)
-    //     // )
-    //     .onComplete(() => {controls.enabled = true;})
-    //     .start();
-    // group.add(tween);
-});
+//     action.play();
+//     // controls.enabled = false;
+//     // cssRenderer.domElement.style.pointerEvents = 'none';
+//     // const tween = new TWEEN.Tween(camera.position)
+//     //     .to(PLAY_POSITION, 1500)
+//     //     .easing(TWEEN.Easing.Quadratic.InOut)
+//     //     // .onUpdate(() =>
+//     //     //   camera.position.set(coords.x, coords.y, camera.position.z)
+//     //     // )
+//     //     .onComplete(() => {controls.enabled = true;})
+//     //     .start();
+//     // group.add(tween);
+// });
 
-// scene.add(cube2)
+// // scene.add(cube2)
 
-interactionManager.add(cube2);
-// scene.add(cube);
+// interactionManager.add(cube2);
+// // scene.add(cube);
 
 renderer.setAnimationLoop(animate);
 
@@ -157,7 +193,9 @@ window.onresize = function () {
 };
 
 function animate(time) {
-    stats.update();
+    if (stats) {
+        stats.update();
+    }
     controls.update();
     cssRenderer.render(scene, camera);
     renderer.render( scene, camera );
@@ -488,4 +526,19 @@ function addButton() {
     scene.add(group)
     
     interactionManager.add(cube);
+}
+
+function statsVF() {
+    let totalVer = 0;
+    let totalFace = 0;
+
+    scene.traverse(object => {
+        if (object.isMesh) {
+            const verts = object.geometry.attributes.position.count;
+            totalVer += verts;
+            totalFace += object.geometry.index ? object.geometry.index.count / 3 : verts/3;  
+        }
+    });
+
+    return [totalVer, totalFace];
 }
