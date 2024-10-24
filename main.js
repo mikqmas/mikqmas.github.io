@@ -11,6 +11,8 @@ import { InteractionManager } from 'three.interactive';
 import * as TWEEN from '@tweenjs/tween.js';
 import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
 import { degToRad } from 'three/src/math/MathUtils.js';
+import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
 let playing = false;
 let action;
@@ -39,7 +41,7 @@ const stats = new Stats();
 container.appendChild( stats.dom );
 
 
-const group = new TWEEN.Group();
+const tgroup = new TWEEN.Group();
 const scene = new THREE.Scene();
 
 // CSS renderer
@@ -102,7 +104,7 @@ loader.load( 'models/arcade_cabinet.glb', function(gltf) {
     console.log("cabinet", cabinet.position)
 
     lStick = cabinet.children.find(el => el.name === "LJoystickstick")
-    console.log("lstick", cabinet.children)
+    console.log("lstick2", cabinet)
     
     addWebsite(gltf.scene.children[5]);
 })
@@ -112,30 +114,7 @@ const light3 = new THREE.SpotLight(0xffffff, 1, 1);
 light3.position.set(5, 5, 5);
 scene.add(light3);
 
-// Button
-// const cube = addCube();
-const geo = new THREE.BoxGeometry(2,2,2);
-const mat = new THREE.MeshPhongMaterial({emissive: 0xfffff33, emissiveIntensity: 100});
-const cube = new THREE.Mesh(geo, mat);
-// cube.rotateX(90)
-cube.position.setY(4)
-cube.addEventListener("click", (event) => {
-    playing = true;
-    event.stopPropagation();
-    controls.enabled = false;
-    cssRenderer.domElement.style.pointerEvents = 'none';
-    const tween = new TWEEN.Tween(camera.position)
-        .to(PLAY_POSITION, 1500)
-        .easing(TWEEN.Easing.Quadratic.InOut)
-        // .onUpdate(() =>
-        //   camera.position.set(coords.x, coords.y, camera.position.z)
-        // )
-        .onComplete(() => {controls.enabled = true;})
-        .start();
-    group.add(tween);
-});
 
-scene.add(cube)
 // Button2
 // const cube = addCube();
 const geo2 = new THREE.BoxGeometry(1,1,1);
@@ -165,7 +144,6 @@ cube2.addEventListener("click", (event) => {
 
 // scene.add(cube2)
 
-interactionManager.add(cube);
 interactionManager.add(cube2);
 // scene.add(cube);
 
@@ -184,7 +162,7 @@ function animate(time) {
     cssRenderer.render(scene, camera);
     renderer.render( scene, camera );
     interactionManager.update();
-    group.update(time);
+    tgroup.update(time);
     if (mixer != null) {
         mixer.update(time);
     }
@@ -354,9 +332,12 @@ function addWebsite(screen) {
             })
         })
         // .addEventListener("wheel", event => console.log(event))
+
     }, 2000)
     
-
+    addArrow();
+    addButton();
+    addText();
 
     // console.log("screen", screen)
     // const webMesh = new THREE.Mesh(imgGeo, imgMat);
@@ -366,4 +347,145 @@ function addWebsite(screen) {
     // webMesh.scale.set(1,1,1);
     // webMesh.position.set(0,1,0);
     // scene.add(webMesh);
+}
+
+function addArrow() {
+    // Create the arrow shaft (cylinder)
+    const shaftGeometry = new THREE.CylinderGeometry(0.05, 0.05, 0.25, 6);
+    const shaftMaterial = new THREE.MeshBasicMaterial({ color: 0x004400 });
+    const shaft = new THREE.Mesh(shaftGeometry, shaftMaterial);
+
+    // Position the shaft
+    shaft.position.y = 2.15;
+
+    // Create the arrowhead (cone)
+    const headGeometry = new THREE.ConeGeometry(0.15, 0.15, 6);
+    const headMaterial = new THREE.MeshBasicMaterial({ color: 0x004400 });
+    const head = new THREE.Mesh(headGeometry, headMaterial);
+    head.rotateX(degToRad(180));
+
+    // Position the head
+    head.position.y = 2;
+
+    // Combine the parts
+    const arrow = new THREE.Group();
+    arrow.add(shaft);
+    arrow.add(head);
+
+    // Add the arrow to the scene
+    scene.add(arrow);
+    const endPosition = {x: arrow.position.x, y: 1, z: arrow.position.z}
+
+    const move = new TWEEN.Tween(arrow.position)
+        .to({y: arrow.position.y + arrow.position <= 0 ? -0.25 : 0.25}, 2000)
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .repeat(Infinity)
+        .yoyo(true)
+        .delay(100)
+        .onRepeat(() => {
+            console.log(arrow.position.y)
+            arrow.position.set(0, arrow.position.y, 0); // Ensure it reverses smoothly
+        })
+        .start();
+
+    tgroup.add(move);
+
+    return arrow;
+}
+
+function addText() {
+    // // Create background plane for the button
+    // const planeGeometry = new THREE.PlaneGeometry(0.5, .15);
+    // const planeMaterial = new THREE.MeshStandardMaterial({ color: 0x0000ff });
+    // const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+    // plane.position.set(0, 2.45, -0.1); // Slightly behind the text
+    // scene.add(plane);
+
+    // Load the font and create the text
+    const loader = new FontLoader();
+    loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function(font) {
+        const textGeometry = new TextGeometry('play', {
+            font: font,
+            size: 0.125,
+            depth: 0.05,
+            curveSegments: 2
+        });
+        textGeometry.center();
+
+        const textMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+
+        // Position the text in the scene
+        textMesh.position.y = 3;
+
+        const anim = new TWEEN.Tween(textMesh.rotation)
+            .to({y: degToRad(-359)}, 6000)
+            .easing(TWEEN.Easing.Linear.InOut)
+            .repeat(Infinity)
+            .start()
+
+        tgroup.add(anim);
+
+        // Add the text to the scene
+        scene.add(textMesh);
+    });
+
+    // return textMesh;
+}
+
+function addButton() {
+    // Button
+    // const cube = addCube();
+    const group = new THREE.Group();
+    
+    const geo = new THREE.BoxGeometry(0.5,0.5,0.5);
+    const mat = new THREE.MeshBasicMaterial({transparent: true, opacity: 0.5});
+    const cube = new THREE.Mesh(geo, mat);
+    cube.position.setY(3)
+
+    const matOutline = new THREE.MeshBasicMaterial({color: 0x004400, side: THREE.BackSide});
+    const cubeOutline = new THREE.Mesh(geo, matOutline);
+    cubeOutline.position.setY(3)
+    cubeOutline.scale.multiplyScalar(1.05);
+
+    cube.addEventListener("click", (event) => {
+        playing = true;
+        event.stopPropagation();
+        controls.enabled = false;
+        cssRenderer.domElement.style.pointerEvents = 'none';
+        const tween = new TWEEN.Tween(camera.position)
+            .to(PLAY_POSITION, 1500)
+            .easing(TWEEN.Easing.Quadratic.InOut)
+            // .onUpdate(() =>
+            //   camera.position.set(coords.x, coords.y, camera.position.z)
+            // )
+            .onComplete(() => {controls.enabled = true;})
+            .start();
+        tgroup.add(tween);
+    });
+
+    cube.addEventListener("mouseover", event => {
+        document.body.style.cursor = 'pointer';
+    })
+
+    cube.addEventListener("mouseout", event => {
+        document.body.style.cursor = 'auto';
+    })
+
+    group.add(cube)
+    group.add(cubeOutline)
+
+    
+
+    const anim = new TWEEN.Tween(group.rotation)
+        .to({y: degToRad(90)}, 3000)
+        .easing(TWEEN.Easing.Linear.InOut)
+        .repeat(Infinity)
+        .start();
+
+    tgroup.add(anim);
+
+    scene.add(group)
+    
+    interactionManager.add(cube);
 }
