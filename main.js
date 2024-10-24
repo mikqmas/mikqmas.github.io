@@ -275,6 +275,32 @@ function addText() {
     });
 }
 
+function startGame() {
+    event.stopPropagation();
+    let toast = "Press 'Esc' Key to Return";
+    if ('ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0) {
+        mobileEscape();
+        toast = "Press 'Back Home' at Top Right";
+    }
+    showToast(toast);
+    cssRenderer.domElement.style.pointerEvents = 'none';
+    const tween = new TWEEN.Tween(camera.position)
+        .to(PLAY_POSITION, 1500)
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .start();
+    tgroup.add(tween);
+}
+
+
+// Esc to Home
+document.addEventListener("keydown", event => {
+    console.log(camera.position === new THREE.Vector3(START_POSITION), camera.position, new THREE.Vector3(START_POSITION))
+    if (event.key === "Escape" && camera.position.distanceTo(START_POSITION) > 1) {
+        console.log("HRE")
+        cameraToHome(scene.getObjectByName("stopMesh"));
+    }
+})
+
 function addButton() {
     const group = new THREE.Group();
     
@@ -289,37 +315,11 @@ function addButton() {
     cubeOutline.scale.multiplyScalar(1.05);
 
     cube.addEventListener("click", (event) => {
-        event.stopPropagation();
-        let toast = "Press 'Esc' Key to Return";
-        if ('ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0) {
-            mobileEscape();
-            toast = "Press 'Back Home' at Top Right";
-        }
-        showToast(toast);
-        cssRenderer.domElement.style.pointerEvents = 'none';
-        const tween = new TWEEN.Tween(camera.position)
-            .to(PLAY_POSITION, 1500)
-            .easing(TWEEN.Easing.Quadratic.InOut)
-            .start();
-        tgroup.add(tween);
+        startGame();
     });
 
-    // Esc to Home
-    document.addEventListener("keydown", event => {
-        console.log(camera.position === new THREE.Vector3(START_POSITION), camera.position, new THREE.Vector3(START_POSITION))
-        if (event.key === "Escape" && camera.position.distanceTo(START_POSITION) > 3) {
-            console.log("HRE")
-            cameraToHome(scene.getObjectByName("stopMesh"));
-        }
-    })
 
-    cube.addEventListener("mouseover", event => {
-        document.body.style.cursor = 'pointer';
-    })
-
-    cube.addEventListener("mouseout", event => {
-        document.body.style.cursor = 'auto';
-    })
+    addCursor(cube);
 
     group.add(cube)
     group.add(cubeOutline)
@@ -380,6 +380,30 @@ function returnHome() {
     })
     scene.add(stopMesh)
     interactionManager.add(stopMesh)
+}
+
+// Add a plane in front of cabinet to click
+const geo = new THREE.PlaneGeometry(.7,.7);
+const mat = new THREE.MeshBasicMaterial({opacity: 0, transparent: true});
+const playPlane = new THREE.Mesh(geo, mat);
+playPlane.position.set(0,1.2,.3);
+playPlane.rotateX(degToRad(-30))
+
+playPlane.addEventListener("click", event => {
+    startGame();
+})
+addCursor(playPlane);
+scene.add(playPlane)
+interactionManager.add(playPlane)
+
+function addCursor(mesh) {
+    mesh.addEventListener("mouseover", event => {
+        document.body.style.cursor = 'pointer';
+    })
+
+    mesh.addEventListener("mouseout", event => {
+        document.body.style.cursor = 'auto';
+    })
 }
 
 function showToast(text) {
