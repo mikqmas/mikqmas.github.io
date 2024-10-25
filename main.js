@@ -13,6 +13,7 @@ import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer
 import { degToRad } from 'three/src/math/MathUtils.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+import { PI } from 'three/webgpu';
 
 const START_POSITION = {x: 3, y: 3, z: 8};
 const PLAY_POSITION = {x: 0, y: 1.5, z: 2.3};
@@ -228,7 +229,6 @@ function addGodot() {
 
     const ratio = height / width;
     css3DObject.scale.set(1/width, 1/height * ratio, 1);
-    css3DObject.position.setY(0.01);
     const imgGeo = new THREE.PlaneGeometry(1, ratio);
     const imgMat = new THREE.MeshBasicMaterial({
         color: new THREE.Color(0x000000),
@@ -250,6 +250,53 @@ function addGodot() {
         iframe.style.border = 'none';
         css3DObject.element.append(iframe);
     }, 1000);
+}
+
+function addScreen(address, positions, rotations) {
+    const width = 1000
+    const height = 700
+
+    const element = document.createElement('div');
+    element.style.width = width + 'px';
+    element.style.height = height + 'px';
+    element.style.backgroundColor = 'red';
+
+    const holder = new THREE.Group();
+    holder.scale.set(.6,.6,1)
+    holder.position.set(...positions);
+    // holder.rotation.set(...rotations)
+    holder.rotation.order = 'ZYX'
+    // holder.rotation.set(0,Math.PI/2, 0)
+    holder.rotation.set(...rotations)
+    // holder.rotateX(.35)
+
+    const css3DObject = new CSS3DObject(element);
+
+    holder.add(css3DObject);
+
+    const ratio = height / width;
+    css3DObject.scale.set(1/width, 1/height * ratio, 1);
+    const imgGeo = new THREE.PlaneGeometry(1, ratio);
+    const imgMat = new THREE.MeshBasicMaterial({
+        color: new THREE.Color(0x000000),
+        blending: THREE.NoBlending,
+        side: THREE.FrontSide,
+    });
+
+    const plane = new THREE.Mesh(imgGeo, imgMat);
+    plane.name = "Screen"
+    holder.add(plane);
+    scene.add(holder);
+
+    setTimeout(() => {
+        plane.material.opacity = 0
+        const iframe = document.createElement('iframe');
+        iframe.src = address; 
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.border = 'none';
+        css3DObject.element.append(iframe);
+    }, 3000);
 }
 
 function addArrow() {
@@ -466,10 +513,14 @@ function mobileEscape() {
     button.addEventListener("click", cameraToHome);
 }
 
+// holder.position.set(1.07, 1.25, 0);
+// holder.rotateZ(degToRad(30));
+// holder.rotateY(degToRad(90));
 // Run
 function init() {
     loadCabinet();
     addGodot();
+    addScreen("https://mikqmas.github.io/webgl", [-1.07, 1.25, 0], [0,-Math.PI/2,-Math.PI/5.8]);
     playInt();
     renderer.setAnimationLoop(animate);
 }
