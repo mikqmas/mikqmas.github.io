@@ -137,9 +137,13 @@ function addWebsite(screen) {
     const height = 700
 
     const element = document.createElement('div');
+    element.style.position = 'absolute';
+    element.style.top = 0;
+    element.style.left = 0;
     element.style.width = width + 'px';
     element.style.height = height + 'px';
     element.style.backgroundColor = 'blue';
+    element.id = "scroll-wrapper";
 
     const holder = new THREE.Group();
     holder.scale.set(.7,.7,1)

@@ -4,6 +4,11 @@ body {
     margin: 0;
 }
 
+#scroll-wrapper {
+    -webkit-overflow-scrolling: touch;
+    overflow-y: scroll;
+}
+
 #mobileEscape {
     display: none;
     position: absolute;
