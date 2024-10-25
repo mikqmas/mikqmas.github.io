@@ -190,6 +190,11 @@ function addWebsite(screen) {
                     },1000) 
                 }
             })
+            iframe.addEventListener("keydown", event => {
+                if (event.key === "Escape") {
+                    cameraToHome();
+                }
+            })
         });
     }, 2000)
     
