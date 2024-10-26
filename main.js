@@ -520,7 +520,7 @@ function mobileEscape() {
 function init() {
     loadCabinet();
     addGodot();
-    addScreen("https://mikqmas.github.io/webgl", [-1.07, 1.25, 0], [0,-Math.PI/2,-Math.PI/5.8]);
+    addScreen("https://mikqmas.github.io/hello-webgl/", [-1.07, 1.25, 0], [0,-Math.PI/2,-Math.PI/5.8]);
     playInt();
     renderer.setAnimationLoop(animate);
 }
