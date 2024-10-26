@@ -259,7 +259,7 @@ function addScreen(address, positions, rotations) {
     const element = document.createElement('div');
     element.style.width = width + 'px';
     element.style.height = height + 'px';
-    element.style.backgroundColor = 'red';
+    element.style.backgroundColor = 'white';
 
     const holder = new THREE.Group();
     holder.scale.set(.6,.6,1)
@@ -296,7 +296,7 @@ function addScreen(address, positions, rotations) {
         iframe.style.height = '100%';
         iframe.style.border = 'none';
         css3DObject.element.append(iframe);
-    }, 3000);
+    }, 2000);
 }
 
 function addArrow() {
